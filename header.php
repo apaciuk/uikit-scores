@@ -1,7 +1,4 @@
 <?php
-require('walker/navigation.php');
-require('walker/WordpressUikitCommentsWalker.php');
-require('walker/WordpressUikitMenuWalker.php');
 /**
  * The header for our theme
  *
@@ -9,7 +6,7 @@ require('walker/WordpressUikitMenuWalker.php');
  *
  * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
  *
- * @package Uikit_Scores
+ * @package template
  */
 
 ?>
@@ -26,53 +23,37 @@ require('walker/WordpressUikitMenuWalker.php');
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <div id="page" class="site">
-	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'uikit_scores' ); ?></a>
+	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'template' ); ?></a>
 
-	<link id="data-uikit-theme" rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/uikit.css"/>
-<?php // Loads HTML5 JavaScript file to add support for HTML5 elements in older IE versions. ?>
-<!--[if lt IE 9]>
-<script src="<?php echo get_template_directory_uri(); ?>/js/html5.js" type="text/javascript"></script>
-<![endif]-->
-<?php
-$nav = wp_nav_menu(array(
-    'theme_location' => 'main',
-    'menu_class'     => 'uk-navbar-nav uk-hidden-small uk-navbar-flip',
-    'depth'          => 2,
-    'walker'         => new Walker_UIKIT('navbar'),
-    'echo'           => false,
-    'fallback_cb'    => false
-));
-?>
-<?php wp_head(); 
-// This fxn allows plugins, and Wordpress itself, to insert themselves/scripts/css/files
-// (right here) into the head of your website. 
-// Removing this fxn call will disable all kinds of plugins and Wordpress default insertions. 
-// Move it if you like, but I would keep it around.
-?>
-</head>
-<body class="tm-background">
-<nav class="tm-navbar uk-navbar uk-navbar-attached uk-navbar-transparent">
-            <div class="uk-container uk-container-center">
-	<a class="uk-navbar-brand uk-hidden-small" href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
-				<img class="uk-margin uk-margin-remove" src="<?php echo get_template_directory_uri(); ?>/img/logo.svg" alt="Logo" width="90" height="30" /></a>
-            <?= $nav ?>
-            <a href="#tm-offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
-            <div class="uk-navbar-brand uk-navbar-center uk-visible-small">
-            <img src="<?php echo get_template_directory_uri(); ?>/img/logo.svg" alt="Logo" width="90" height="30" title="UIkit" alt="UIkit">
-        </div>
-    </nav>
-    <div id="tm-offcanvas" class="uk-offcanvas">
-        <div class="uk-offcanvas-bar">
-            <?=  wp_nav_menu(array(
-           'theme_location' => 'mobile',
-           'menu_class' => 'uk-nav uk-nav-offcanvas uk-nav-parent-icon',
-           'depth'          => 2,
-           'walker'         => new WordpressUikitMenuWalker('navbar'),
-           'echo'           => false,
-           'fallback_cb'    => false
-            )); ?>
-        </div>
-    </div>
-<main class="main-fluid">
-<div class="tm-section">
-<div class="uk-container">   
+	<header id="masthead" class="site-header">
+		<div class="site-branding">
+			<?php
+			the_custom_logo();
+			if ( is_front_page() && is_home() ) :
+				?>
+				<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
+				<?php
+			else :
+				?>
+				<p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p>
+				<?php
+			endif;
+			$template_description = get_bloginfo( 'description', 'display' );
+			if ( $template_description || is_customize_preview() ) :
+				?>
+				<p class="site-description"><?php echo $template_description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+			<?php endif; ?>
+		</div><!-- .site-branding -->
+
+		<nav id="site-navigation" class="main-navigation">
+			<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Primary Menu', 'template' ); ?></button>
+			<?php
+			wp_nav_menu(
+				array(
+					'theme_location' => 'menu-1',
+					'menu_id'        => 'primary-menu',
+				)
+			);
+			?>
+		</nav><!-- #site-navigation -->
+	</header><!-- #masthead -->
